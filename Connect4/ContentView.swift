@@ -8,9 +8,30 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var startPVP: Bool = false
+
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        NavigationView {
+            VStack {
+                Text("Connect4")
+                    .font(.largeTitle)
+                    .foregroundColor(.blue)
+
+                Spacer()
+                
+                NavigationLink(isActive: $startPVP) {
+                    PVPView(isActive: $startPVP)
+                } label: {
+                    Text("START GAME!")
+                        .font(.largeTitle)
+                        .foregroundColor(.yellow)
+                        .padding()
+                        .background(.blue)
+                        .cornerRadius(20)
+                }
+                .padding(.bottom, 100)
+            }
+        }
     }
 }
 
