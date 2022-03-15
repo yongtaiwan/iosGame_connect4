@@ -17,6 +17,8 @@ struct PVPView: View {
                 .padding()
 
             Spacer()
+            
+            Scoreboard(game: game)
 
             ChessboardView(game: game)
 

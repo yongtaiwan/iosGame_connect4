@@ -30,6 +30,7 @@ class Game: ObservableObject {
     @Published var remainSteps: Array<Int> = Array(repeating: Chessboard.BOARD.GRID.rawValue / 2, count: 2)
     @Published var gameOver: Bool = false
     @Published var judgement: PLAYER = .NONE
+    @Published var score: Array<Int> = Array(repeating: 0, count: 3)
     
     func restart() {
         chessboard = Chessboard()
@@ -66,6 +67,7 @@ class Game: ObservableObject {
         if remainSteps[0] == 0 && remainSteps[1] == 0 {
             judgement = .NONE
             gameOver = true
+            score[1] += 1
             return
         }
         
@@ -116,6 +118,13 @@ class Game: ObservableObject {
             if count >= 4 {
                 judgement = player
                 gameOver = true
+                
+                if judgement == .ONE {
+                    score[0] += 1
+                }
+                else if judgement == .TWO {
+                    score[2] += 1
+                }
 
                 for i in 0..<4 {
                     if player == .ONE {

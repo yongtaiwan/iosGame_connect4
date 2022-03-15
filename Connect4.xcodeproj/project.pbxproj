@@ -16,6 +16,7 @@
 		036EBAE627DC87FC00A27324 /* ChessboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036EBAE527DC87FB00A27324 /* ChessboardView.swift */; };
 		036EBAE827DC89F400A27324 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036EBAE727DC89F400A27324 /* Game.swift */; };
 		03DE81C927E0EF53003F0829 /* JudgeAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DE81C827E0EF53003F0829 /* JudgeAlert.swift */; };
+		03DE81CB27E0F10B003F0829 /* Scoreboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DE81CA27E0F10B003F0829 /* Scoreboard.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		036EBAE527DC87FB00A27324 /* ChessboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessboardView.swift; sourceTree = "<group>"; };
 		036EBAE727DC89F400A27324 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		03DE81C827E0EF53003F0829 /* JudgeAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JudgeAlert.swift; sourceTree = "<group>"; };
+		03DE81CA27E0F10B003F0829 /* Scoreboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scoreboard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				036EBAE727DC89F400A27324 /* Game.swift */,
 				036EBAE127DC820F00A27324 /* PVPView.swift */,
 				036EBAE327DC871900A27324 /* MenuBar.swift */,
+				03DE81CA27E0F10B003F0829 /* Scoreboard.swift */,
 				036EBAE527DC87FB00A27324 /* ChessboardView.swift */,
 				03DE81C827E0EF53003F0829 /* JudgeAlert.swift */,
 				036EBAD727DC7CD900A27324 /* Assets.xcassets */,
@@ -159,6 +162,7 @@
 				036EBAD427DC7CD000A27324 /* Connect4App.swift in Sources */,
 				036EBAE627DC87FC00A27324 /* ChessboardView.swift in Sources */,
 				03DE81C927E0EF53003F0829 /* JudgeAlert.swift in Sources */,
+				03DE81CB27E0F10B003F0829 /* Scoreboard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
