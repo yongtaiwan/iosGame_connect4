@@ -21,6 +21,14 @@ struct PVPView: View {
             ChessboardView(game: game)
 
             Spacer()
+
+            if game.gameOver {
+                JudgeAlert(game: game)
+            }
+            else {
+                JudgeAlert(game: game)
+                    .hidden()
+            }
         }
         .navigationBarHidden(true)
     }

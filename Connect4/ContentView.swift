@@ -15,6 +15,7 @@ struct ContentView: View {
             VStack {
                 Text("Connect4")
                     .font(.largeTitle)
+                    .fontWeight(.heavy)
                     .foregroundColor(.blue)
 
                 Spacer()
@@ -24,6 +25,7 @@ struct ContentView: View {
                 } label: {
                     Text("START GAME!")
                         .font(.largeTitle)
+                        .fontWeight(.heavy)
                         .foregroundColor(.yellow)
                         .padding()
                         .background(.blue)

@@ -9,55 +9,80 @@ import SwiftUI
 
 struct ChessboardView: View {
     @ObservedObject var game: Game
-    @State var player: Game.PLAYER = .ONE
-    @State var isLayingDown: Bool = false
 
     var body: some View {
-        let columns = Array(repeating: GridItem(), count: Chessboard.COL)
+        let COL = Chessboard.BOARD.COL.rawValue
+        let ROW = Chessboard.BOARD.ROW.rawValue
+        let columns = Array(repeating: GridItem(), count: COL)
         
-        LazyVGrid(columns: columns, spacing: 10) {
-            ForEach(0..<Chessboard.ROW) { i in
-                ForEach(0..<Chessboard.COL) { j in
-                    let position = (Chessboard.ROW - i - 1) * Chessboard.COL + j
+        return LazyVGrid(columns: columns) {
+            ForEach(0..<ROW) { i in
+                ForEach(0..<COL) { j in
+                    let position = (ROW - i - 1) * COL + j
 
                     Group {
                         switch(game.chessboard.content[position]) {
                         case Game.PLAYER.NONE:
-                            Circle()
-                                .foregroundColor(.white)
+                            Rectangle()
+                                .overlay {
+                                    Circle()
+                                        .foregroundColor(.white)
+                                        .scaleEffect(0.65)
+                                }
                         case Game.PLAYER.ONE:
-                            if game.chessboard.targetPosition == position {
-                                Circle()
-                                    .foregroundColor(.yellow)
-                            }
-                            else {
-                                Circle()
-                                    .foregroundColor(.yellow)
-                            }
+                            Rectangle()
+                                .overlay {
+                                    Circle()
+                                        .foregroundColor(.yellow)
+                                        .scaleEffect(0.65)
+                                }
                         case Game.PLAYER.TWO:
-                            Circle()
-                                .foregroundColor(.red)
+                            Rectangle()
+                                .overlay {
+                                    Circle()
+                                        .foregroundColor(.red)
+                                        .scaleEffect(0.65)
+                                }
+                        case Game.PLAYER.ONE_WIN:
+                            Rectangle()
+                                .overlay {
+                                    Circle()
+                                        .foregroundColor(.yellow)
+                                        .scaleEffect(0.65)
+                                }
+                                .overlay {
+                                    Circle()
+                                        .stroke(.green, lineWidth: 5)
+                                        .scaleEffect(0.65)
+                                }
+                        case Game.PLAYER.TWO_WIN:
+                            Rectangle()
+                                .overlay {
+                                    Circle()
+                                        .foregroundColor(.red)
+                                        .scaleEffect(0.65)
+                                }
+                                .overlay {
+                                    Circle()
+                                        .stroke(.green, lineWidth: 5)
+                                        .scaleEffect(0.65)
+                                }
                         }
                     }
-                    .frame(width: 25, height: 25)
-                    .padding(.vertical, 10)
-                    .gesture(
-                        TapGesture()
-                            .onChanged { _ in
-                                if game.layDown(col: j, player: player) {
-                                    player = player == .ONE ? .TWO: .ONE
-                                }
-                            }
-                            .onEnded { _ in
-                                
-                            }
-                    )
+                    .frame(width: 50, height: 45)
+                    .foregroundColor(.white.opacity(0))
+                    .onTapGesture {
+                        if game.layDown(col: j) {
+                            game.judge()
+                        }
+                    }
                 }
             }
         }
         .background(.blue)
         .cornerRadius(30)
         .padding()
+        .disabled(game.gameOver)
     }
 }
 
