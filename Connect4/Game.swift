@@ -13,6 +13,7 @@ struct Chessboard {
     }
     var content: Array<Game.PLAYER> = Array(repeating: Game.PLAYER.NONE, count: BOARD.COL.rawValue * BOARD.ROW.rawValue)
     var currentTops: Array<Int> = Array(repeating: 0, count: BOARD.COL.rawValue)
+    var targetColumn: Int = 0
     var targetPosition: Int = -1
     var startOfLine: Int = -1
 }
