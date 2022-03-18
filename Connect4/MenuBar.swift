@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MenuBar: View {
     @Binding var isActive: Bool
-    @ObservedObject var game: Game
+    @ObservedObject var game: GameViewModel
 
     var body: some View {
         HStack {
@@ -41,6 +41,6 @@ struct MenuBar: View {
 
 struct MenuBar_Previews: PreviewProvider {
     static var previews: some View {
-        MenuBar(isActive: .constant(true), game: Game())
+        MenuBar(isActive: .constant(true), game: GameViewModel())
     }
 }

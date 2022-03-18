@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct Scoreboard: View {
-    @ObservedObject var game: Game
+    @ObservedObject var game: GameViewModel
     
     var body: some View {
         VStack {
@@ -28,7 +28,7 @@ struct Scoreboard: View {
                         .foregroundColor(.yellow)
                         .frame(width: 30, height: 30)
                         .offset(x: -50)
-                    Text("\(game.remainSteps[0])")
+                    Text("\(game.property.remainSteps[0])")
                         .font(.title)
                         .fontWeight(.heavy)
                 }
@@ -36,18 +36,18 @@ struct Scoreboard: View {
                 Divider()
                 
                 VStack {
-                    if game.thisTurn == .ONE {
+                    if game.property.thisTurn == .ONE {
                         Circle()
                             .foregroundColor(.yellow)
                             .frame(width: 30, height: 30)
                     }
-                    else if game.thisTurn == .TWO {
+                    else if game.property.thisTurn == .TWO {
                         Circle()
                             .foregroundColor(.red)
                             .frame(width: 30, height: 30)
                     }
 
-                    Text("\(game.score[0]):\(game.score[1]):\(game.score[2])")
+                    Text("\(game.property.score[0]):\(game.property.score[1]):\(game.property.score[2])")
                         .font(.title)
                         .fontWeight(.heavy)
                         .padding(.horizontal, 30)
@@ -60,7 +60,7 @@ struct Scoreboard: View {
                         .foregroundColor(.red)
                         .frame(width: 30, height: 30)
                         .offset(x: 50)
-                    Text("\(game.remainSteps[1])")
+                    Text("\(game.property.remainSteps[1])")
                         .font(.title)
                         .fontWeight(.heavy)
                 }
@@ -72,6 +72,6 @@ struct Scoreboard: View {
 
 struct Scoreboard_Previews: PreviewProvider {
     static var previews: some View {
-        Scoreboard(game: Game())
+        Scoreboard(game: GameViewModel())
     }
 }
