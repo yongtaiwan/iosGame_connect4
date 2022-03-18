@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var setting: Setting = Setting()
     @State var start: Bool = false
     @State var type: Game.TYPE = .PVP
+    @State var showSetting: Bool = false
 
     var body: some View {
         NavigationView {
@@ -29,7 +31,7 @@ struct ContentView: View {
                 Spacer()
 
                 NavigationLink(isActive: $start) {
-                    GameView(isActive: $start, type: type)
+                    GameView(isActive: $start, type: type, setting: $setting)
                 } label: {
                     Text("START GAME!")
                         .font(.custom("Chalkboard", size: 38))
@@ -39,7 +41,29 @@ struct ContentView: View {
                         .background(.blue)
                         .cornerRadius(20)
                 }
-                .padding(.bottom, 100)
+                
+                Spacer()
+                
+                HStack {
+                    Spacer()
+
+                    Button {
+                        showSetting = true
+                    } label: {
+                        Image(systemName: "gearshape.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 30)
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(.blue)
+                            .clipShape(Circle())
+                    }
+                    .sheet(isPresented: $showSetting) {
+                        SettingView(show: $showSetting, setting: $setting)
+                    }
+                    .padding()
+                }
             }
         }
     }

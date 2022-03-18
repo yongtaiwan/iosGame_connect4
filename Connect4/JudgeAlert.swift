@@ -10,6 +10,7 @@ import SwiftUI
 struct JudgeAlert: View {
     @ObservedObject var game: GameViewModel
     @State private var offset: CGFloat = 200
+    @Binding var setting: Setting
 
     var body: some View {
         
@@ -39,7 +40,7 @@ struct JudgeAlert: View {
                     }
                 }
                 .padding()
-                .background(LinearGradient(colors: [.yellow, .red], startPoint: .topLeading, endPoint: .bottomTrailing))
+                .background(LinearGradient(colors: [setting.playerColor[0], setting.playerColor[1]], startPoint: .topLeading, endPoint: .bottomTrailing))
                 .cornerRadius(20)
 
                 Label("Next Round", systemImage: "forward.fill")
@@ -58,6 +59,6 @@ struct JudgeAlert: View {
 
 struct JudgeAlert_Previews: PreviewProvider {
     static var previews: some View {
-        JudgeAlert(game: GameViewModel())
+        JudgeAlert(game: GameViewModel(), setting: .constant(Setting()))
     }
 }

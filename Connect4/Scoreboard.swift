@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Scoreboard: View {
     @ObservedObject var game: GameViewModel
+    @Binding var setting: Setting
     
     var body: some View {
         VStack {
@@ -25,7 +26,7 @@ struct Scoreboard: View {
             HStack {
                 VStack {
                     Circle()
-                        .foregroundColor(.yellow)
+                        .foregroundColor(setting.playerColor[0])
                         .frame(width: 30, height: 30)
                         .offset(x: -50)
                     Text("\(game.property.remainSteps[0])")
@@ -38,12 +39,12 @@ struct Scoreboard: View {
                 VStack {
                     if game.property.thisTurn == .ONE {
                         Circle()
-                            .foregroundColor(.yellow)
+                            .foregroundColor(setting.playerColor[0])
                             .frame(width: 30, height: 30)
                     }
                     else if game.property.thisTurn == .TWO {
                         Circle()
-                            .foregroundColor(.red)
+                            .foregroundColor(setting.playerColor[1])
                             .frame(width: 30, height: 30)
                     }
 
@@ -57,7 +58,7 @@ struct Scoreboard: View {
                 
                 VStack {
                     Circle()
-                        .foregroundColor(.red)
+                        .foregroundColor(setting.playerColor[1])
                         .frame(width: 30, height: 30)
                         .offset(x: 50)
                     Text("\(game.property.remainSteps[1])")
@@ -72,6 +73,6 @@ struct Scoreboard: View {
 
 struct Scoreboard_Previews: PreviewProvider {
     static var previews: some View {
-        Scoreboard(game: GameViewModel())
+        Scoreboard(game: GameViewModel(), setting: .constant(Setting()))
     }
 }

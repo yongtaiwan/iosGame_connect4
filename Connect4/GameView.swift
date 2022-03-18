@@ -11,27 +11,40 @@ struct GameView: View {
     @Binding var isActive: Bool
     let type: Game.TYPE
     @StateObject var game: GameViewModel = GameViewModel()
+    @Binding var setting: Setting
+    @State var showSetting: Bool = false
 
     var body: some View {
-        VStack {
-            MenuBar(isActive: $isActive, game: game)
-                .padding()
+        ZStack(alignment: .topTrailing) {
+            VStack {
+                MenuBar(isActive: $isActive, game: game, setting: $setting, showSetting: $showSetting)
+                    .padding()
 
-            Spacer()
+                Spacer()
 
-            Scoreboard(game: game)
-                .frame(height: 100)
+                Scoreboard(game: game, setting: $setting)
+                    .frame(height: 100)
 
-            ChessboardView(game: game)
+                ChessboardView(game: game, setting: $setting)
 
-            Spacer()
+                Spacer()
 
-            if game.property.gameOver {
-                JudgeAlert(game: game)
+                if game.property.gameOver {
+                    JudgeAlert(game: game, setting: $setting)
+                }
+                else {
+                    JudgeAlert(game: game, setting: $setting)
+                        .hidden()
+                }
             }
-            else {
-                JudgeAlert(game: game)
-                    .hidden()
+            if showSetting {
+                VStack {
+                    MusicBlock(setting: $setting)
+                }
+                .background(Color("launchColor"))
+                .cornerRadius(30)
+                .padding()
+                .padding([.top, .leading], 50)
             }
         }
         .navigationBarHidden(true)
@@ -43,6 +56,6 @@ struct GameView: View {
 
 struct GameView_Previews: PreviewProvider {
     static var previews: some View {
-        GameView(isActive: .constant(true), type: Game.TYPE.PVP)
+        GameView(isActive: .constant(true), type: Game.TYPE.PVP, setting: .constant(Setting()))
     }
 }

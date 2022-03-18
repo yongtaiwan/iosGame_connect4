@@ -10,6 +10,7 @@ import SwiftUI
 struct ChessboardView: View {
     @ObservedObject var game: GameViewModel
     @State var chipOffsetY: Array<CGFloat> = Array(repeating: 0, count: Chessboard.BOARD.GRID.rawValue)
+    @Binding var setting: Setting
 
     var body: some View {
         let COL = Chessboard.BOARD.COL.rawValue
@@ -30,28 +31,28 @@ struct ChessboardView: View {
                             GridView(.white.opacity(0), offset: chipOffsetY[position])
                             
                         case .PREVIEW_ONE:
-                            GridView(.yellow.opacity(0.5), offset: chipOffsetY[position])
+                            GridView(setting.playerColor[0].opacity(0.5), offset: chipOffsetY[position])
                             
                         case .PREVIEW_TWO:
-                            GridView(.red.opacity(0.5), offset: chipOffsetY[position])
+                            GridView(setting.playerColor[1].opacity(0.5), offset: chipOffsetY[position])
 
                         case .ONE:
-                            GridView(.yellow, offset: chipOffsetY[position])
+                            GridView(setting.playerColor[0], offset: chipOffsetY[position])
                             
                         case .TWO:
-                            GridView(.red, offset: chipOffsetY[position])
+                            GridView(setting.playerColor[1], offset: chipOffsetY[position])
                             
                         case .ONE_WIN:
-                            GridView(.yellow, offset: chipOffsetY[position], toMark: true)
+                            GridView(setting.playerColor[0], offset: chipOffsetY[position], toMark: true)
                             
                         case .TWO_WIN:
-                            GridView(.red, offset: chipOffsetY[position], toMark: true)
+                            GridView(setting.playerColor[1], offset: chipOffsetY[position], toMark: true)
                         }
                     }
                 }
             }
             .overlay {
-                BoardView(game: game, offset: $chipOffsetY)
+                BoardView(game: game, setting: $setting, offset: $chipOffsetY)
             }
             .cornerRadius(20)
             .padding(.horizontal)
@@ -62,7 +63,7 @@ struct ChessboardView: View {
 
 struct ChessboardView_Previews: PreviewProvider {
     static var previews: some View {
-        ChessboardView(game: GameViewModel())
+        ChessboardView(game: GameViewModel(), setting: .constant(Setting()))
     }
 }
 
@@ -121,11 +122,15 @@ struct GridView: View {
 
 struct BoardView: View {
     @ObservedObject var game: GameViewModel
+    @Binding var setting: Setting
     @Binding var offset: Array<CGFloat>
     
     func oneTurn(col: Int = -1) -> Bool {
         if !game.property.gameOver && game.layDown(col: col) {
             game.property.waiting = true
+
+            setting.player2.seek(to: .zero)
+            setting.player2.play()
             offset[game.property.chessboard.targetPosition] = -270
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
