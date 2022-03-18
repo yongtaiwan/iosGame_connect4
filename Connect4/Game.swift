@@ -13,50 +13,94 @@ struct Chessboard {
     }
     var content: Array<Game.PLAYER> = Array(repeating: Game.PLAYER.NONE, count: BOARD.COL.rawValue * BOARD.ROW.rawValue)
     var currentTops: Array<Int> = Array(repeating: 0, count: BOARD.COL.rawValue)
+    var validColumns: Array<Int> = Array(0..<BOARD.COL.rawValue)
     var targetColumn: Int = 0
-    var targetPosition: Int = -1
-    var startOfLine: Int = -1
+    var targetPosition: Int = 0
+    var startOfLine: Int = 0
 }
 
-class Game: ObservableObject {
+struct Game {
+    enum TYPE: String, CaseIterable {
+        case PVP = "person.fill", PVE = "display"
+    }
     enum PLAYER {
-        case NONE, ONE, TWO, ONE_WIN, TWO_WIN
+        case NONE, PREVIEW_ONE, PREVIEW_TWO, ONE, TWO, ONE_WIN, TWO_WIN
     }
     enum DIRECTION: Int, CaseIterable {
         case SLASH = 6, VERTICAL = 7, BACKSLASH = 8, HORIZONTAL = 1
     }
 
-    @Published var chessboard = Chessboard()
-    @Published var thisTurn: PLAYER = .ONE
-    @Published var remainSteps: Array<Int> = Array(repeating: Chessboard.BOARD.GRID.rawValue / 2, count: 2)
-    @Published var gameOver: Bool = false
-    @Published var judgement: PLAYER = .NONE
-    @Published var score: Array<Int> = Array(repeating: 0, count: 3)
-    
-    func restart() {
-        chessboard = Chessboard()
-        thisTurn = .ONE
-        remainSteps = Array(repeating: Chessboard.BOARD.GRID.rawValue / 2, count: 2)
-        gameOver = false
-        judgement = .NONE
+    var type: TYPE = .PVP
+    var chessboard = Chessboard()
+    var thisTurn: PLAYER = .ONE
+    var remainSteps: Array<Int> = Array(repeating: Chessboard.BOARD.GRID.rawValue / 2, count: 2)
+    var waiting: Bool = false
+    var gameOver: Bool = false
+    var judgement: PLAYER = .NONE
+    var score: Array<Int> = Array(repeating: 0, count: 3)
+}
+
+class GameViewModel: ObservableObject {
+    @Published var property = Game()
+
+    func setType(type: Game.TYPE) {
+        property.type = type
     }
     
-    func layDown(col: Int) -> Bool {
-        if chessboard.currentTops[col] >= Chessboard.BOARD.ROW.rawValue {
+    func restart() {
+        property.chessboard = Chessboard()
+        property.thisTurn = .ONE
+        property.remainSteps = Array(repeating: Chessboard.BOARD.GRID.rawValue / 2, count: 2)
+        property.gameOver = false
+        property.judgement = .NONE
+    }
+    
+    func setPreview() {
+        if property.chessboard.currentTops[property.chessboard.targetColumn] < Chessboard.BOARD.ROW.rawValue {
+            if property.chessboard.content[property.chessboard.targetPosition] == .PREVIEW_ONE ||
+                property.chessboard.content[property.chessboard.targetPosition] == .PREVIEW_TWO {
+                property.chessboard.content[property.chessboard.targetPosition] = .NONE
+            }
+
+            property.chessboard.targetPosition =
+                property.chessboard.currentTops[property.chessboard.targetColumn] * 7 + property.chessboard.targetColumn
+            
+            if property.thisTurn == .ONE {
+                property.chessboard.content[property.chessboard.targetPosition] = .PREVIEW_ONE
+            }
+            else if property.thisTurn == .TWO {
+                property.chessboard.content[property.chessboard.targetPosition] = .PREVIEW_TWO
+            }
+        }
+    }
+    
+    func layDown(col: Int = -1) -> Bool {
+        if col != -1 {
+            property.chessboard.targetColumn = col
+        }
+
+        if !property.chessboard.validColumns.contains(property.chessboard.targetColumn) {
             return false
         }
         else {
-            chessboard.targetPosition = chessboard.currentTops[col] * 7 + col
-            chessboard.content[chessboard.targetPosition] = thisTurn
-            chessboard.currentTops[col] += 1
+            property.chessboard.targetPosition =
+                property.chessboard.currentTops[property.chessboard.targetColumn] * 7 + property.chessboard.targetColumn
+            property.chessboard.content[property.chessboard.targetPosition] = property.thisTurn
+            property.chessboard.currentTops[property.chessboard.targetColumn] += 1
+
+            if property.chessboard.currentTops[property.chessboard.targetColumn] >= Chessboard.BOARD.ROW.rawValue {
+                property.chessboard.validColumns = property.chessboard.validColumns.filter {
+                    $0 != property.chessboard.targetColumn
+                }
+            }
             
-            switch(thisTurn) {
+            switch(property.thisTurn) {
             case .ONE:
-                thisTurn = .TWO
-                remainSteps[0] -= 1
+                property.thisTurn = .TWO
+                property.remainSteps[0] -= 1
             case .TWO:
-                thisTurn = .ONE
-                remainSteps[1] -= 1
+                property.thisTurn = .ONE
+                property.remainSteps[1] -= 1
             default:
                 break
             }
@@ -65,14 +109,14 @@ class Game: ObservableObject {
     }
     
     func judge() {
-        if remainSteps[0] == 0 && remainSteps[1] == 0 {
-            judgement = .NONE
-            gameOver = true
-            score[1] += 1
+        if property.remainSteps[0] == 0 && property.remainSteps[1] == 0 {
+            property.judgement = .NONE
+            property.gameOver = true
+            property.score[1] += 1
             return
         }
         
-        func isValid(dir: DIRECTION, thisChip: Int, nextChip: Int) -> Bool {
+        func isValid(dir: Game.DIRECTION, thisChip: Int, nextChip: Int) -> Bool {
             if nextChip < 0 || nextChip > Chessboard.BOARD.GRID.rawValue - 1 {
                 return false
             }
@@ -84,16 +128,16 @@ class Game: ObservableObject {
             return true
         }
         
-        let player: PLAYER = (thisTurn == .ONE) ? .TWO : .ONE
+        let player: Game.PLAYER = (property.thisTurn == .ONE) ? .TWO : .ONE
         
-        for dir in DIRECTION.allCases {
-            var thisChip = chessboard.targetPosition
-            var nextChip = chessboard.targetPosition
+        for dir in Game.DIRECTION.allCases {
+            var thisChip = property.chessboard.targetPosition
+            var nextChip = property.chessboard.targetPosition
             var count = 0
-            chessboard.startOfLine = chessboard.targetPosition
+            property.chessboard.startOfLine = property.chessboard.targetPosition
 
-            while count < 4 && chessboard.content[nextChip] == player {
-                chessboard.startOfLine = nextChip
+            while count < 4 && property.chessboard.content[nextChip] == player {
+                property.chessboard.startOfLine = nextChip
                 count += 1
                 thisChip = nextChip
                 nextChip += dir.rawValue
@@ -103,10 +147,10 @@ class Game: ObservableObject {
                 }
             }
 
-            nextChip = chessboard.targetPosition
+            nextChip = property.chessboard.targetPosition
             count -= 1
 
-            while count < 4 && chessboard.content[nextChip] == player {
+            while count < 4 && property.chessboard.content[nextChip] == player {
                 count += 1
                 thisChip = nextChip
                 nextChip -= dir.rawValue
@@ -117,22 +161,22 @@ class Game: ObservableObject {
             }
 
             if count >= 4 {
-                judgement = player
-                gameOver = true
+                property.judgement = player
+                property.gameOver = true
                 
-                if judgement == .ONE {
-                    score[0] += 1
+                if property.judgement == .ONE {
+                    property.score[0] += 1
                 }
-                else if judgement == .TWO {
-                    score[2] += 1
+                else if property.judgement == .TWO {
+                    property.score[2] += 1
                 }
 
                 for i in 0..<4 {
                     if player == .ONE {
-                        chessboard.content[chessboard.startOfLine - i * dir.rawValue] = .ONE_WIN
+                        property.chessboard.content[property.chessboard.startOfLine - i * dir.rawValue] = .ONE_WIN
                     }
                     else if player == .TWO {
-                        chessboard.content[chessboard.startOfLine - i * dir.rawValue] = .TWO_WIN
+                        property.chessboard.content[property.chessboard.startOfLine - i * dir.rawValue] = .TWO_WIN
                     }
                 }
 

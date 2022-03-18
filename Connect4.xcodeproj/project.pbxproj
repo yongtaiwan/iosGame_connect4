@@ -11,10 +11,11 @@
 		036EBAD627DC7CD000A27324 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036EBAD527DC7CD000A27324 /* ContentView.swift */; };
 		036EBAD827DC7CD900A27324 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 036EBAD727DC7CD900A27324 /* Assets.xcassets */; };
 		036EBADB27DC7CD900A27324 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 036EBADA27DC7CD900A27324 /* Preview Assets.xcassets */; };
-		036EBAE227DC820F00A27324 /* PVPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036EBAE127DC820F00A27324 /* PVPView.swift */; };
+		036EBAE227DC820F00A27324 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036EBAE127DC820F00A27324 /* GameView.swift */; };
 		036EBAE427DC871900A27324 /* MenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036EBAE327DC871900A27324 /* MenuBar.swift */; };
 		036EBAE627DC87FC00A27324 /* ChessboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036EBAE527DC87FB00A27324 /* ChessboardView.swift */; };
 		036EBAE827DC89F400A27324 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036EBAE727DC89F400A27324 /* Game.swift */; };
+		0389A34727E487470007A24F /* Chalkboard.ttc in Resources */ = {isa = PBXBuildFile; fileRef = 0389A34627E487470007A24F /* Chalkboard.ttc */; };
 		03DE81C927E0EF53003F0829 /* JudgeAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DE81C827E0EF53003F0829 /* JudgeAlert.swift */; };
 		03DE81CB27E0F10B003F0829 /* Scoreboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DE81CA27E0F10B003F0829 /* Scoreboard.swift */; };
 /* End PBXBuildFile section */
@@ -26,10 +27,11 @@
 		036EBAD527DC7CD000A27324 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		036EBAD727DC7CD900A27324 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		036EBADA27DC7CD900A27324 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		036EBAE127DC820F00A27324 /* PVPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PVPView.swift; sourceTree = "<group>"; };
+		036EBAE127DC820F00A27324 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		036EBAE327DC871900A27324 /* MenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBar.swift; sourceTree = "<group>"; };
 		036EBAE527DC87FB00A27324 /* ChessboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessboardView.swift; sourceTree = "<group>"; };
 		036EBAE727DC89F400A27324 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		0389A34627E487470007A24F /* Chalkboard.ttc */ = {isa = PBXFileReference; lastKnownFileType = file; name = Chalkboard.ttc; path = ../../font/Chalkboard/Chalkboard.ttc; sourceTree = "<group>"; };
 		03DE81C827E0EF53003F0829 /* JudgeAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JudgeAlert.swift; sourceTree = "<group>"; };
 		03DE81CA27E0F10B003F0829 /* Scoreboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scoreboard.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -64,11 +66,12 @@
 		036EBAD227DC7CD000A27324 /* Connect4 */ = {
 			isa = PBXGroup;
 			children = (
+				0389A34627E487470007A24F /* Chalkboard.ttc */,
 				031B0BBC27E31591005F51C9 /* Info.plist */,
 				036EBAD327DC7CD000A27324 /* Connect4App.swift */,
 				036EBAD527DC7CD000A27324 /* ContentView.swift */,
 				036EBAE727DC89F400A27324 /* Game.swift */,
-				036EBAE127DC820F00A27324 /* PVPView.swift */,
+				036EBAE127DC820F00A27324 /* GameView.swift */,
 				036EBAE327DC871900A27324 /* MenuBar.swift */,
 				03DE81CA27E0F10B003F0829 /* Scoreboard.swift */,
 				036EBAE527DC87FB00A27324 /* ChessboardView.swift */,
@@ -146,6 +149,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				036EBADB27DC7CD900A27324 /* Preview Assets.xcassets in Resources */,
+				0389A34727E487470007A24F /* Chalkboard.ttc in Resources */,
 				036EBAD827DC7CD900A27324 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -157,7 +161,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				036EBAE227DC820F00A27324 /* PVPView.swift in Sources */,
+				036EBAE227DC820F00A27324 /* GameView.swift in Sources */,
 				036EBAE827DC89F400A27324 /* Game.swift in Sources */,
 				036EBAD627DC7CD000A27324 /* ContentView.swift in Sources */,
 				036EBAE427DC871900A27324 /* MenuBar.swift in Sources */,

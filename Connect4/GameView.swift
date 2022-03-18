@@ -1,5 +1,5 @@
 //
-//  PVPView.swift
+//  GameView.swift
 //  Connect4
 //
 //  Created by FanRende on 2022/3/12.
@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-struct PVPView: View {
+struct GameView: View {
     @Binding var isActive: Bool
-    @StateObject var game = Game()
+    let type: Game.TYPE
+    @StateObject var game: GameViewModel = GameViewModel()
 
     var body: some View {
         VStack {
@@ -17,14 +18,15 @@ struct PVPView: View {
                 .padding()
 
             Spacer()
-            
+
             Scoreboard(game: game)
+                .frame(height: 100)
 
             ChessboardView(game: game)
 
             Spacer()
 
-            if game.gameOver {
+            if game.property.gameOver {
                 JudgeAlert(game: game)
             }
             else {
@@ -33,11 +35,14 @@ struct PVPView: View {
             }
         }
         .navigationBarHidden(true)
+        .onAppear {
+            self.game.setType(type: type)
+        }
     }
 }
 
-struct PVPView_Previews: PreviewProvider {
+struct GameView_Previews: PreviewProvider {
     static var previews: some View {
-        PVPView(isActive: .constant(true))
+        GameView(isActive: .constant(true), type: Game.TYPE.PVP)
     }
 }

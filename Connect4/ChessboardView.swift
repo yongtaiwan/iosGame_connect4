@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ChessboardView: View {
-    @ObservedObject var game: Game
+    @ObservedObject var game: GameViewModel
     @State var chipOffsetY: Array<CGFloat> = Array(repeating: 0, count: Chessboard.BOARD.GRID.rawValue)
 
     var body: some View {
@@ -17,7 +17,7 @@ struct ChessboardView: View {
         let columns = Array(repeating: GridItem(spacing: 0), count: COL)
 
         return VStack {
-            ArrowView(columns: columns, col: game.chessboard.targetColumn)
+            ArrowView(columns: columns, col: game.property.chessboard.targetColumn)
                 .padding()
 
             LazyVGrid(columns: columns, spacing: 0) {
@@ -25,20 +25,26 @@ struct ChessboardView: View {
                     ForEach(0..<COL) { j in
                         let position = (ROW - i - 1) * COL + j
                         
-                        switch(game.chessboard.content[position]) {
-                        case Game.PLAYER.NONE:
+                        switch(game.property.chessboard.content[position]) {
+                        case .NONE:
                             GridView(.white.opacity(0), offset: chipOffsetY[position])
                             
-                        case Game.PLAYER.ONE:
+                        case .PREVIEW_ONE:
+                            GridView(.yellow.opacity(0.5), offset: chipOffsetY[position])
+                            
+                        case .PREVIEW_TWO:
+                            GridView(.red.opacity(0.5), offset: chipOffsetY[position])
+
+                        case .ONE:
                             GridView(.yellow, offset: chipOffsetY[position])
                             
-                        case Game.PLAYER.TWO:
+                        case .TWO:
                             GridView(.red, offset: chipOffsetY[position])
                             
-                        case Game.PLAYER.ONE_WIN:
+                        case .ONE_WIN:
                             GridView(.yellow, offset: chipOffsetY[position], toMark: true)
                             
-                        case Game.PLAYER.TWO_WIN:
+                        case .TWO_WIN:
                             GridView(.red, offset: chipOffsetY[position], toMark: true)
                         }
                     }
@@ -49,14 +55,14 @@ struct ChessboardView: View {
             }
             .cornerRadius(20)
             .padding(.horizontal)
-            .disabled(game.gameOver)
+            .disabled(game.property.gameOver || game.property.waiting)
         }
     }
 }
 
 struct ChessboardView_Previews: PreviewProvider {
     static var previews: some View {
-        ChessboardView(game: Game())
+        ChessboardView(game: GameViewModel())
     }
 }
 
@@ -114,42 +120,49 @@ struct GridView: View {
 }
 
 struct BoardView: View {
-    @ObservedObject var game: Game
+    @ObservedObject var game: GameViewModel
     @Binding var offset: Array<CGFloat>
     
-    func tapGesture(col: Int) -> some Gesture {
-        TapGesture()
-            .onEnded { _ in
-                game.chessboard.targetColumn = col
+    func oneTurn(col: Int = -1) -> Bool {
+        if !game.property.gameOver && game.layDown(col: col) {
+            game.property.waiting = true
+            offset[game.property.chessboard.targetPosition] = -270
 
-                if game.layDown(col: col) {
-                    offset[game.chessboard.targetPosition] = -270
-
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        withAnimation(.spring(dampingFraction: 0.8)) {
-                            offset[game.chessboard.targetPosition] = 0
-                        }
-                        game.judge()
-                    }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                withAnimation(.spring(dampingFraction: 0.8)) {
+                    offset[game.property.chessboard.targetPosition] = 0
+                }
+                game.judge()
+                
+                if game.property.type == .PVP || col != -1 || game.property.gameOver {
+                    game.property.waiting = false
                 }
             }
+
+            return true
+        }
+        else {
+            return false
+        }
     }
     
     func dragGesture(col: Int, width: Double) -> some Gesture {
-        DragGesture()
+        DragGesture(minimumDistance: 0)
             .onChanged({ value in
                 let offset = Int(round(value.translation.width / width))
-                game.chessboard.targetColumn = col + offset
+                let targetColumn = col + offset
+                
+                if targetColumn >= 0 && targetColumn < 7 {
+                    game.property.chessboard.targetColumn = targetColumn
+                    game.setPreview()
+                }
             })
             .onEnded { value in
-                if game.layDown(col: game.chessboard.targetColumn) {
-                    offset[game.chessboard.targetPosition] = -270
-
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        withAnimation(.spring(dampingFraction: 0.8)) {
-                            offset[game.chessboard.targetPosition] = 0
+                if self.oneTurn() {
+                    if game.property.type == .PVE && !game.property.gameOver {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            self.oneTurn(col: game.property.chessboard.validColumns.randomElement()!)
                         }
-                        game.judge()
                     }
                 }
             }
@@ -168,10 +181,8 @@ struct BoardView: View {
                             .frame(height: 45)
                             .mask(HoleShapeMask().fill(style: FillStyle(eoFill: true)))
                             .gesture(
-                                SimultaneousGesture(
-                                    tapGesture(col: j),
-                                    dragGesture(col: j, width: Double(geometry.size.width) / Double(COL))
-                            ))
+                                dragGesture(col: j, width: Double(geometry.size.width) / Double(COL))
+                            )
                     }
                 }
             }
