@@ -31,7 +31,7 @@ struct JudgeAlert: View {
                             .fontWeight(.heavy)
                             .foregroundColor(.white)
                     case .TWO:
-                        Text("🎉 Player 2 Wins 🎉")
+                        Text("🎉 \((game.property.type == .PVP) ? "Player 2": "Environment") Wins 🎉")
                             .font(.title)
                             .fontWeight(.heavy)
                             .foregroundColor(.white)
@@ -54,6 +54,7 @@ struct JudgeAlert: View {
         .onAppear {
             self.offset = 0
         }
+        .alert("Time's Up!", isPresented: $game.property.timeUp) {}
     }
 }
 

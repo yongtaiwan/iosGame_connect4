@@ -129,14 +129,14 @@ struct BoardView: View {
         if !game.property.gameOver && game.layDown(col: col) {
             game.property.waiting = true
 
-            setting.player2.seek(to: .zero)
-            setting.player2.play()
             offset[game.property.chessboard.targetPosition] = -270
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 withAnimation(.spring(dampingFraction: 0.8)) {
                     offset[game.property.chessboard.targetPosition] = 0
                 }
+                setting.player2.seek(to: .zero)
+                setting.player2.play()
                 game.judge()
                 
                 if game.property.type == .PVP || col != -1 || game.property.gameOver {

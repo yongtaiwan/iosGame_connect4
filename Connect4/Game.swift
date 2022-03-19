@@ -38,6 +38,20 @@ struct Game {
     var gameOver: Bool = false
     var judgement: PLAYER = .NONE
     var score: Array<Int> = Array(repeating: 0, count: 3)
+    var timer: Timer? = nil
+    var timeUp: Bool = false
+    var countDownTime: TimeInterval = 120
+    var timerLabel = String()
+    var formatter = DateFormatter()
+    
+    init() {
+        self.formatter.dateFormat = "HH:mm:ss"
+        let dateComponent = DateComponents(
+            calendar: .current,
+            hour: 0, minute: 2, second: 0)
+        self.timerLabel =
+            self.formatter.string(from: dateComponent.date!)
+    }
 }
 
 class GameViewModel: ObservableObject {
@@ -47,12 +61,44 @@ class GameViewModel: ObservableObject {
         property.type = type
     }
     
+    func countDown() {
+        property.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { timer in
+            if self.property.countDownTime != 0 && !self.property.gameOver {
+                self.property.countDownTime -= 1
+                
+                let dateComponent = DateComponents(
+                    calendar: .current,
+                    hour: 0,
+                    minute: Int(self.property.countDownTime) / 60,
+                    second: Int(self.property.countDownTime) % 60
+                )
+                self.property.timerLabel = self.property.formatter.string(from: dateComponent.date!)
+            }
+            else {
+                self.property.timer?.invalidate()
+                
+                if self.property.countDownTime == 0 {
+                    self.property.timeUp = true
+                    self.property.gameOver = true
+                    self.property.judgement = .NONE
+                    self.property.score[1] += 1
+                }
+            }
+        })
+    }
+    
     func restart() {
         property.chessboard = Chessboard()
         property.thisTurn = .ONE
         property.remainSteps = Array(repeating: Chessboard.BOARD.GRID.rawValue / 2, count: 2)
         property.gameOver = false
         property.judgement = .NONE
+        property.timer?.invalidate()
+        property.timeUp = false
+        property.countDownTime = 120
+        let dateComponent = DateComponents(calendar: .current, hour: 0, minute: 2, second: 0)
+        property.timerLabel = property.formatter.string(from: dateComponent.date!)
+        countDown()
     }
     
     func setPreview() {

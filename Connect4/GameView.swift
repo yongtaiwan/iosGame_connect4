@@ -50,6 +50,7 @@ struct GameView: View {
         .navigationBarHidden(true)
         .onAppear {
             self.game.setType(type: type)
+            self.game.countDown()
         }
     }
 }
