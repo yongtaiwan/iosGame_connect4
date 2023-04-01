@@ -34,7 +34,7 @@
 		036EBAE327DC871900A27324 /* MenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBar.swift; sourceTree = "<group>"; };
 		036EBAE527DC87FB00A27324 /* ChessboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessboardView.swift; sourceTree = "<group>"; };
 		036EBAE727DC89F400A27324 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
-		0389A34627E487470007A24F /* Chalkboard.ttc */ = {isa = PBXFileReference; lastKnownFileType = file; name = Chalkboard.ttc; path = ../../font/Chalkboard/Chalkboard.ttc; sourceTree = "<group>"; };
+		0389A34627E487470007A24F /* Chalkboard.ttc */ = {isa = PBXFileReference; lastKnownFileType = file; name = Chalkboard.ttc; path = Connect4/Chalkboard.ttc; sourceTree = SOURCE_ROOT; };
 		0389A34827E4B7B50007A24F /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		0389A34A27E4C6300007A24F /* The_Bluest_Star.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = The_Bluest_Star.mp3; sourceTree = SOURCE_ROOT; };
 		0389A34C27E4CDD90007A24F /* putting_a_pencil.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = putting_a_pencil.mp3; sourceTree = SOURCE_ROOT; };
